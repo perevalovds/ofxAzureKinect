@@ -61,11 +61,12 @@ common:
 	# ADDON_LIBS_EXCLUDE =
 
 vs:
-	ADDON_INCLUDES += azure_sdk\include
-	ADDON_INCLUDES += azure_body_sdk\include
-	ADDON_LIBS += $(AZUREKINECT_SDK)\sdk\windows-desktop\amd64\release\lib\k4a.lib
-	ADDON_LIBS += $(AZUREKINECT_SDK)\sdk\windows-desktop\amd64\release\lib\k4arecord.lib
-	#ADDON_LIBS += $(AZUREKINECT_BODY_SDK)\sdk\windows-desktop\amd64\release\lib\k4abt.lib
+	ADDON_INCLUDES += libs\azure_sdk\include
+	ADDON_INCLUDES += libs\azure_body_sdk\include
+	ADDON_LIBS += libs\azure_sdk\windows-desktop\amd64\release\lib\k4a.lib
+	ADDON_LIBS += libs\azure_sdk\windows-desktop\amd64\release\lib\k4arecord.lib
+    # Added by code:
+	#ADDON_LIBS += azure_body_sdk\windows-desktop\amd64\release\lib\k4abt.lib
 	
 linux64: 
 	ADDON_INCLUDES += /usr/include

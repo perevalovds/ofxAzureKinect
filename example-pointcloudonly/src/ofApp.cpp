@@ -49,9 +49,8 @@ void ofApp::draw()
 	{
 		this->cam.begin();
 		{
-			ofScale(0.5f);
-
 			ofDrawAxis(1000.0f);
+			ofScale(0.2f, -0.2f, -0.2f);
 
 			//if (this->kinectDevice.getColorInDepthTex().isAllocated())
 			//{

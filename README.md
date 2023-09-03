@@ -39,6 +39,7 @@ Windows:
     - Uncomment #define USE_BODYTRACKER at ofxAzureKinectConfig.h
     - Copy all DLLs from libs/azure_body_sdk to project's bin folder
     - Copy the cuDNN model file `dnn_model_2_0.onnx` from the Body SDK `tools` folder into your project's `bin` folder!
+6. Build as x64 (not 32 bit)
 
 ### Linux
 
@@ -74,3 +75,4 @@ Also on Windows do the following:
     - Uncomment #define USE_BODYTRACKER at ofxAzureKinectConfig.h
     - Copy all DLLs from libs/azure_body_sdk to project's bin folder
     - Copy the cuDNN model file `dnn_model_2_0.onnx` from the Body SDK `tools` folder into your project's `bin` folder!
+3. Build as x64 (not 32 bit)
