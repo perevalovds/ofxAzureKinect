@@ -9,10 +9,10 @@ void ofApp::setup()
 	ofLogNotice(__FUNCTION__) << "Found " << ofxAzureKinect::Device::getInstalledCount() << " installed devices.";
 
 	// The following will start all connected devices as standalone (no sync).
-	//this->setupStandalone();
+	this->setupStandalone();
 
 	// The following will assign sync to devices based on serial number.
-	this->setupMasterSubordinate();
+	// this->setupMasterSubordinate();
 
 	// Add FPS counter for each device.
 	this->fpsCounters.resize(this->kinectDevices.size());
