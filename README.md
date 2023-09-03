@@ -8,7 +8,8 @@ ofxAddon that allows you to use [Azure Kinect](https://azure.microsoft.com/en-us
 * Use multiple sensors per machine (tested up to 4!)
 * Set up sync mode (standalone, master, subordinate) with multiple devices when connected with sync cables.
 * Record and playback streams.
-* More coming soon...
+
+Forked from prisonerjohn/ofxAzureKinect, added example-pointcloudonly and improved addons setup for Windows.
 
 ## Installation
 
@@ -16,33 +17,38 @@ The instructions below are based on the [Azure Kinect Sensor SDK Usage](https://
 
 ### Windows
 
-* Install the [Azure Kinect Sensor SDK](https://docs.microsoft.com/en-us/azure/Kinect-dk/sensor-sdk-download).
-* Install the [Azure Kinect Body Tracking SDK](https://docs.microsoft.com/en-us/azure/Kinect-dk/body-sdk-download).
-* Add an environment variable for `AZUREKINECT_SDK` and set it to the Sensor SDK installation path (no trailing slash). The default is `C:\Program Files\Azure Kinect SDK v1.4.1`.
-* Add an environment variable for `AZUREKINECT_BODY_SDK` and set it to the Body SDK installation path (no trailing slash). The default is `C:\Program Files\Azure Kinect Body Tracking SDK`.
+1. Install the [Azure Kinect Sensor SDK](https://docs.microsoft.com/en-us/azure/Kinect-dk/sensor-sdk-download).
+2. Copy c:\Program Files\Azure Kinect SDK v1.4.1\sdk contents to ofxAzureKinect\libs\azure_sdk
+3. For each project copy all DLLs from azure_sdk into project's bin folder
 
-	![Environment Variables](Install-EnvVars.png)
+For body tracking:
 
-* Add the path to the Sensor SDK `bin` folder to the `PATH` variable. The default is `%AZUREKINECT_SDK%\sdk\windows-desktop\amd64\release\bin`.
-* Add the path to the Body SDK `bin` folder to the `PATH` variable. The default is `%AZUREKINECT_BODY_SDK%\sdk\windows-desktop\amd64\release\bin`.
-* Add the path to the Body SDK `tools` folder to the `PATH` variable. The default is `%AZUREKINECT_BODY_SDK%\tools`.
+4. Install the [Azure Kinect Body Tracking SDK](https://docs.microsoft.com/en-us/azure/Kinect-dk/body-sdk-download).
+5 Add an environment variable for `AZUREKINECT_BODY_SDK` and set it to the Body SDK installation path (no trailing slash). The default is `C:\Program Files\Azure Kinect Body Tracking SDK`.
 
 	![Path](Install-Path.png)
 
-* Clone this repository in your openFrameworks `addons` folder.
-* You can then use the OF Project Generator to generate projects with the appropriate headers and libraries included. ✌️
-* Note that if you want to use body tracking, you will need to copy the cuDNN model file `dnn_model_2_0.onnx` from the Body SDK `tools` folder into your project's `bin` folder!
+1. Clone this repository in your openFrameworks `addons` folder.
+2. Use the OF Project Generator to generate projects with the appropriate headers and libraries included.
+
+Windows:
+ 
+3. Copy ofxAzureKinectConfig.h from any of examples to project's src folder.
+4. Copy all DLLs from libs/azure_sdk to project's bin folder
+5. To use body tracking:
+    - Uncomment #define USE_BODYTRACKER at ofxAzureKinectConfig.h
+    - Copy all DLLs from libs/azure_body_sdk to project's bin folder
+    - Copy the cuDNN model file `dnn_model_2_0.onnx` from the Body SDK `tools` folder into your project's `bin` folder!
 
 ### Linux
 
-* Configure the [Linux Software Repository for Microsoft](https://docs.microsoft.com/en-us/windows-server/administration/linux-package-repository-for-microsoft-software). Note that for Ubuntu you'll need to set up the repo for 18.04 even if you're running newer versions.
-* Install the Azure Kinect Sensor SDK packages: `libk4a1.3` `libk4a1.3-dev` `k4a-tools`
-* Install the Azure Kinect Body Tracking SDK packages: `libk4abt1.0` `libk4abt1.0-dev`
-* Setup udev rules by copying [this file](https://github.com/microsoft/Azure-Kinect-Sensor-SDK/blob/develop/scripts/99-k4a.rules) to `/etc/udev/rules.d/99-k4a.rules`.
-* Install [libjpeg-turbo](https://sourceforge.net/projects/libjpeg-turbo/).
-* Clone this repository in your openFrameworks `addons` folder.
-* You can then use the OF Project Generator to generate projects with the appropriate headers and libraries included. 
-🐣
+1. Configure the [Linux Software Repository for Microsoft](https://docs.microsoft.com/en-us/windows-server/administration/linux-package-repository-for-microsoft-software). Note that for Ubuntu you'll need to set up the repo for 18.04 even if you're running newer versions.
+2. Install the Azure Kinect Sensor SDK packages: `libk4a1.3` `libk4a1.3-dev` `k4a-tools`
+3. Install the Azure Kinect Body Tracking SDK packages: `libk4abt1.0` `libk4abt1.0-dev`
+4. Setup udev rules by copying [this file](https://github.com/microsoft/Azure-Kinect-Sensor-SDK/blob/develop/scripts/99-k4a.rules) to `/etc/udev/rules.d/99-k4a.rules`.
+5. Install [libjpeg-turbo](https://sourceforge.net/projects/libjpeg-turbo/).
+6. Clone this repository in your openFrameworks `addons` folder.
+7. You can then use the OF Project Generator to generate projects with the appropriate headers and libraries included. 
 
 ## Compatibility
 
@@ -53,11 +59,18 @@ Tested with:
 
 ## Examples
 
-Use the OF Project Generator to create the example project files. If everything is installed correctly, it should properly locate all required include and library files.
-
-* `example-streams` demonstrates how to get depth, color, infrared textures from the device.
+* `example-pointcloudonly` demonstrates pure point cloud rendering
 * `example-pointCloud` demonstrates how to draw the basic point cloud VBO from the device.
+* `example-streams` demonstrates how to get depth, color, infrared textures from the device.
 * `example-shader` demonstrates how to reconstruct a point cloud using LUTs in a shader.
 * `example-bodies` demonstrates how to get the body tracking index texture, and skeleton joint information.
 * `example-multi` demonstrates how to use multiple devices in a single app.
 * `example-record` demonstrates how to record and playback device streams.
+
+Use the OF Project Generator to create the example project files. If everything is installed correctly, it should properly locate all required include and library files.
+Also on Windows do the following:
+1. Copy all DLLs from libs/azure_sdk to project's bin folder
+2. If example uses body tracking:
+    - Uncomment #define USE_BODYTRACKER at ofxAzureKinectConfig.h
+    - Copy all DLLs from libs/azure_body_sdk to project's bin folder
+    - Copy the cuDNN model file `dnn_model_2_0.onnx` from the Body SDK `tools` folder into your project's `bin` folder!

@@ -1,9 +1,12 @@
 #pragma once
 
+#include "ofxAzureKinectConfig.h"
+
 #include <mutex>
 #include <string>
 
 #include <k4a/k4a.hpp>
+
 #include <turbojpeg.h>
 
 #include "ofEvents.h"
@@ -25,9 +28,10 @@ namespace ofxAzureKinect
 		Stream();
 		virtual ~Stream();
 
+#ifdef USE_BODYTRACKER
 		virtual bool startBodyTracker(BodyTrackerSettings trackerSettings = BodyTrackerSettings());
 		virtual bool stopBodyTracker();
-
+#endif
 		bool isOpen() const;
 		bool isStreaming() const;
 		bool isFrameNew() const;
@@ -67,6 +71,7 @@ namespace ofxAzureKinect
 
 		const ofVbo& getPointCloudVbo() const;
 
+#ifdef USE_BODYTRACKER
 		const BodyTracker& getBodyTracker() const;
 		BodyTracker& getBodyTracker();
 
@@ -76,6 +81,7 @@ namespace ofxAzureKinect
 		size_t getNumBodies() const;
 		const std::vector<k4abt_skeleton_t>& getBodySkeletons() const;
 		const std::vector<uint32_t>& getBodyIDs() const;
+#endif
 
 	protected:
 		virtual bool setupDepthToWorldTable();
@@ -122,7 +128,9 @@ namespace ofxAzureKinect
 
 		tjhandle jpegDecompressor;
 
+#ifdef USE_BODYTRACKER
 		BodyTracker bodyTracker;
+#endif
 
 		ofShortPixels depthPix;
 		ofTexture depthTex;

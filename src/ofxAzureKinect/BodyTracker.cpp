@@ -1,5 +1,6 @@
 #include "BodyTracker.h"
 
+#ifdef USE_BODYTRACKER
 namespace ofxAzureKinect
 {
 	BodyTrackerSettings::BodyTrackerSettings()
@@ -136,3 +137,4 @@ namespace ofxAzureKinect
 		return this->bodyIDs;
 	}
 }
+#endif

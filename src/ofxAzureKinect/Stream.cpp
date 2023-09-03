@@ -140,7 +140,9 @@ namespace ofxAzureKinect
 	{
 		if (!this->bStreaming) return false;
 
+#ifdef USE_BODYTRACKER
 		this->stopBodyTracker();
+#endif
 
 		std::unique_lock<std::mutex> lock(this->mutex);
 		this->stopThread();
@@ -153,6 +155,8 @@ namespace ofxAzureKinect
 		return true;
 	}
 
+
+#ifdef USE_BODYTRACKER
 	bool Stream::startBodyTracker(BodyTrackerSettings trackerSettings)
 	{
 		return this->bodyTracker.startTracking(this->calibration, trackerSettings);
@@ -162,6 +166,7 @@ namespace ofxAzureKinect
 	{
 		return this->bodyTracker.stopTracking();
 	}
+#endif
 
 	void Stream::threadedFunction()
 	{
@@ -306,10 +311,12 @@ namespace ofxAzureKinect
 			this->updateColorInDepthFrame(depthImg, colorImg);
 		}
 
+#ifdef USE_BODYTRACKER
 		if (this->bodyTracker.isTracking())
 		{
 			this->bodyTracker.processCapture(this->capture);
 		}
+#endif
 
 		// Release images.
 		depthImg.reset();
@@ -409,10 +416,12 @@ namespace ofxAzureKinect
 			}
 		}
 
+#ifdef USE_BODYTRACKER
 		if (this->bodyTracker.isTracking())
 		{
 			this->bodyTracker.updateTextures();
 		}
+#endif
 
 		// Update frame number.
 		this->texFrameNum = this->pixFrameNum;
@@ -562,7 +571,7 @@ namespace ofxAzureKinect
 
 		case FramesPerSecond::K4A_FRAMES_PER_SECOND_15:
 			return 15;
-			
+
 		case FramesPerSecond::K4A_FRAMES_PER_SECOND_30:
 		default:
 			return 30;
@@ -644,6 +653,7 @@ namespace ofxAzureKinect
 		return this->pointCloudVbo;
 	}
 
+#ifdef USE_BODYTRACKER
 	const BodyTracker& Stream::getBodyTracker() const
 	{
 		return this->bodyTracker;
@@ -678,4 +688,5 @@ namespace ofxAzureKinect
 	{
 		return this->bodyTracker.getBodyIDs();
 	}
+#endif
 }

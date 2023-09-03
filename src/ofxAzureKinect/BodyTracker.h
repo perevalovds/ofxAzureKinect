@@ -1,5 +1,8 @@
 #pragma once
 
+#include "ofxAzureKinectConfig.h"
+#ifdef USE_BODYTRACKER
+
 #include <k4a/k4a.hpp>
 #include <k4abt.h>
 
@@ -55,3 +58,5 @@ namespace ofxAzureKinect
 		ofEventListeners eventListeners;
 	};
 }
+
+#endif

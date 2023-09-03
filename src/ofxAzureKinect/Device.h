@@ -3,8 +3,6 @@
 #include <string>
 
 #include <k4a/k4a.hpp>
-#include <k4abt.h>
-
 #include "ofPixels.h"
 #include "ofTexture.h"
 

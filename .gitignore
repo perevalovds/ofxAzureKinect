@@ -112,3 +112,9 @@ Desktop.ini
 *.vcxproj
 *vcxproj.*
 icon.rc
+/libs/azure_body_sdk/include
+/libs/azure_body_sdk/netstandard2.0
+/libs/azure_body_sdk/windows-desktop
+/libs/azure_sdk/include
+/libs/azure_sdk/netstandard2.0
+/libs/azure_sdk/windows-desktop
