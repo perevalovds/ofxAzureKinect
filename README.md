@@ -37,7 +37,7 @@ Windows:
 4. Copy all DLLs from libs/azure_sdk to project's bin folder
 5. To use body tracking:
     - Uncomment #define USE_BODYTRACKER at ofxAzureKinectConfig.h
-    - Copy all DLLs from libs/azure_body_sdk to project's bin folder
+    - Copy all DLLs, PDB, JSON and XML from libs/azure_body_sdk to project's bin folder
     - Copy the cuDNN model file `dnn_model_2_0.onnx` from the Body SDK `tools` folder into your project's `bin` folder!
 6. Build as x64 (not 32 bit)
 
@@ -70,7 +70,7 @@ Tested with:
 
 Use the OF Project Generator to create the example project files. If everything is installed correctly, it should properly locate all required include and library files.
 Also on Windows do the following:
-1. Copy all DLLs from libs/azure_sdk to project's bin folder
+1. Copy all DLLs, PDB, JSON and XML from libs/azure_sdk to project's bin folder
 2. If example uses body tracking:
     - Uncomment #define USE_BODYTRACKER at ofxAzureKinectConfig.h
     - Copy all DLLs from libs/azure_body_sdk to project's bin folder
