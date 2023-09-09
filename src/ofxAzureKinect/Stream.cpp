@@ -377,6 +377,9 @@ namespace ofxAzureKinect
 				this->pointCloudVbo.setVertexData(this->positionCache.data(), this->numPoints, GL_STREAM_DRAW);
 				this->pointCloudVbo.setTexCoordData(this->uvCache.data(), this->numPoints, GL_STREAM_DRAW);
 			}
+			else {
+				pointCloudVbo.clear();
+			}
 		}
 
 		if (this->bUpdateColor && this->getColorFormat() == K4A_IMAGE_FORMAT_COLOR_BGRA32)
