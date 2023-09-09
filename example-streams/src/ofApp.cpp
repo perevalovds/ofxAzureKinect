@@ -40,7 +40,7 @@ void ofApp::draw()
 	if (this->kinectDevice.isStreaming())
 	{
 		this->kinectDevice.getColorTex().draw(0, 0, 1280, 720);
-		this->kinectDevice.getDepthTex().draw(1280, 0, 360, 360);
+		this->kinectDevice.getDepthTex16().draw(1280, 0, 360, 360);
 		this->kinectDevice.getIrTex().draw(1280, 360, 360, 360);
 	}
 

@@ -44,7 +44,7 @@ void ofApp::draw()
 		if (kinectPlayback.isStreaming())
 		{
 			kinectPlayback.getColorTex().draw(0, 0, 1280, 720);
-			kinectPlayback.getDepthTex().draw(1280, 0, 360, 360);
+			kinectPlayback.getDepthTex16().draw(1280, 0, 360, 360);
 			kinectPlayback.getIrTex().draw(1280, 360, 360, 360);
 		}
 	}
@@ -53,7 +53,7 @@ void ofApp::draw()
 		if (kinectDevice.isStreaming())
 		{
 			kinectDevice.getColorTex().draw(0, 0, 1280, 720);
-			kinectDevice.getDepthTex().draw(1280, 0, 360, 360);
+			kinectDevice.getDepthTex16().draw(1280, 0, 360, 360);
 			kinectDevice.getIrTex().draw(1280, 360, 360, 360);
 		}
 	}

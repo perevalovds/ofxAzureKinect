@@ -88,13 +88,13 @@ void ofApp::draw()
 
 			this->shader.begin();
 			{
-				this->shader.setUniformTexture("uDepthTex", this->kinectDevice.getDepthTex(), 1);
+				this->shader.setUniformTexture("uDepthTex", this->kinectDevice.getDepthTex16(), 1);
 				this->shader.setUniformTexture("uBodyIndexTex", this->kinectDevice.getBodyIndexTex(), 2);
 				this->shader.setUniformTexture("uWorldTex", this->kinectDevice.getDepthToWorldTex(), 3);
-				this->shader.setUniform2i("uFrameSize", this->kinectDevice.getDepthTex().getWidth(), this->kinectDevice.getDepthTex().getHeight());
+				this->shader.setUniform2i("uFrameSize", this->kinectDevice.getDepthTex16().getWidth(), this->kinectDevice.getDepthTex16().getHeight());
 				this->shader.setUniform1iv("uBodyIDs", bodyIDs, kMaxBodies);
 
-				int numPoints = this->kinectDevice.getDepthTex().getWidth() * this->kinectDevice.getDepthTex().getHeight();
+				int numPoints = this->kinectDevice.getDepthTex16().getWidth() * this->kinectDevice.getDepthTex16().getHeight();
 				this->pointsVbo.drawInstanced(GL_POINTS, 0, 1, numPoints);
 			}
 			this->shader.end();

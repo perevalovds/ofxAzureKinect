@@ -20,9 +20,9 @@ void ofApp::setup()
 		settings.subordinateDelayUsec = 0;
 		settings.updateColor = false;
 		settings.updateIr = false;
-		settings.updateWorld = true;
-		settings.update3DPoints = false;        
-		settings.updateVbo = true;
+
+		settings.updatePointCloud = true; // Used for getting CPU point cloud
+		settings.updateVbo = true;		// Used for getting GPU point cloud. This sets updatePointCloud to true automatically.
 		settings.syncImages = false;
 
 		this->kinectDevice.startCameras(settings);
@@ -38,7 +38,11 @@ void ofApp::exit()
 //--------------------------------------------------------------
 void ofApp::update()
 {
-
+	if (kinectDevice.isFrameNew())
+	{
+		// CPU point cloud for further processing
+		const vector<glm::vec3>& pointCloud = kinectDevice.getPointCloud();
+	}
 }
 
 //--------------------------------------------------------------
@@ -57,9 +61,13 @@ void ofApp::draw()
 			//{
 			//	this->kinectDevice.getColorInDepthTex().bind();
 			//}
+
+			// kinectDevice.getPointCloudVbo() is GPU point cloud
+
 			this->kinectDevice.getPointCloudVbo().draw(
 				GL_POINTS,
-				0, this->kinectDevice.getPointCloudVbo().getNumVertices());
+				0, this->kinectDevice.getPointCloudVbo().getNumVertices()); 
+
 			//if (this->kinectDevice.getColorInDepthTex().isAllocated())
 			//{
 			//	this->kinectDevice.getColorInDepthTex().unbind();

@@ -54,7 +54,9 @@ namespace ofxAzureKinect
 		const ofVbo& getPointCloudVbo() const;
 
 		const ofShortPixels& getDepthPix() const;
-		const ofTexture& getDepthTex() const;
+		const ofTexture& getDepthTex16();	// Loads texture on request
+		bool getDepthPixels8(float min_dist, float max_dist, int& w, int& h, std::vector<unsigned char>& data);
+
 
 		const ofPixels& getColorPix() const;
 		const ofTexture& getColorTex() const;
@@ -140,6 +142,7 @@ namespace ofxAzureKinect
 
 		ofShortPixels depthPix;
 		ofTexture depthTex;
+		bool depthTexIsDirty = false;
 
 		ofPixels colorPix;
 		ofTexture colorTex;

@@ -212,6 +212,8 @@ namespace ofxAzureKinect
 			const auto depthData = reinterpret_cast<uint16_t*>(depthImg.get_buffer());
 			this->depthPix.setFromPixels(depthData, depthDims.x, depthDims.y, 1);
 
+			depthTexIsDirty = true;
+
 			ofLogVerbose(__FUNCTION__) << "Capture Depth16 " << depthDims.x << "x" << depthDims.y << " stride: " << depthImg.get_stride_bytes() << ".";
 		}
 		else
@@ -319,7 +321,7 @@ namespace ofxAzureKinect
 
 	void Stream::updateTextures()
 	{
-		if (this->depthPix.isAllocated())
+		/*if (this->depthPix.isAllocated())
 		{
 			// Update the depth texture.
 			if (!this->depthTex.isAllocated())
@@ -330,7 +332,7 @@ namespace ofxAzureKinect
 
 			this->depthTex.loadData(this->depthPix);
 			ofLogVerbose(__FUNCTION__) << "Update Depth16 " << this->depthTex.getWidth() << "x" << this->depthTex.getHeight() << ".";
-		}
+		}*/
 
 		if (this->bUpdateColor && this->colorPix.isAllocated())
 		{
@@ -605,9 +607,50 @@ namespace ofxAzureKinect
 		return this->depthPix;
 	}
 
-	const ofTexture& Stream::getDepthTex() const
+	const ofTexture& Stream::getDepthTex16()
 	{
+		if (!depthTex.isAllocated())
+		{
+			this->depthTex.allocate(this->depthPix);
+			depthTex.setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+		}
+		if (depthTexIsDirty)
+		{
+			depthTexIsDirty = false;
+			if (depthPix.isAllocated())
+			{
+
+				depthTex.loadData(depthPix);
+				ofLogVerbose(__FUNCTION__) << "Update Depth16 " << depthTex.getWidth() << "x" << depthTex.getHeight() << ".";
+			}
+		}
 		return this->depthTex;
+	}
+
+	bool Stream::getDepthPixels8(float min_dist, float max_dist, int& w, int& h, std::vector<unsigned char>& data)
+	{
+		const ofShortPixels& depthPix = getDepthPix();
+		if (!depthPix.isAllocated())
+		{
+			w = 0;
+			h = 0;
+			data.clear();
+			return false;
+		}
+
+		w = depthPix.getWidth();
+		h = depthPix.getHeight();
+		const uint16_t* data16 = depthPix.getData();
+		data.resize(w * h);
+		for (int i = 0; i < w * h; i++) {
+			if (data16[i] > 0) {
+				data[i] = int(ofMap(data16[i], min_dist, max_dist, 255, 0, true));
+			}
+			else {
+				data[i] = 0;
+			}
+		}
+		return true;
 	}
 
 	const ofPixels& Stream::getColorPix() const

@@ -115,7 +115,7 @@ void ofApp::draw()
 		if (device->isStreaming())
 		{
 			device->getColorTex().draw(x, 0, 640, 360);
-			device->getDepthTex().draw(x, 360, 320, 320);
+			device->getDepthTex16().draw(x, 360, 320, 320);
 			device->getIrTex().draw(x + 320, 360, 320, 320);
 
 			ofDrawBitmapStringHighlight(ofToString(this->fpsCounters[i].getFps(), 2) + " FPS", x + 10, 350, device->isFrameNew() ? ofColor::red : ofColor::black);
