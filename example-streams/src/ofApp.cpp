@@ -12,6 +12,7 @@ void ofApp::setup()
 		auto kinectSettings = ofxAzureKinect::DeviceSettings();
 		kinectSettings.syncImages = false;
 		kinectSettings.updateWorld = false;
+        // TODO settings now all false by default - so needs to test it here        
 		this->kinectDevice.startCameras(kinectSettings);
 	}
 }

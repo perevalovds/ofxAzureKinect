@@ -15,6 +15,7 @@ void ofApp::setup()
 		kinectSettings.updateColor = true;
 		kinectSettings.colorResolution = K4A_COLOR_RESOLUTION_1080P;
 		kinectSettings.updateVbo = false;
+        // TODO settings now all false by default - so needs to test it here
 		this->kinectDevice.startCameras(kinectSettings);
 	}
 

@@ -14,30 +14,32 @@ namespace ofxAzureKinect
 {
 	struct DeviceSettings
 	{
-		DepthMode depthMode;
-		ColorResolution colorResolution;
-		ImageFormat colorFormat;
-		FramesPerSecond cameraFps;
+		DepthMode depthMode = K4A_DEPTH_MODE_NFOV_UNBINNED;
+		ColorResolution colorResolution = K4A_COLOR_RESOLUTION_720P;
+		ImageFormat colorFormat = K4A_IMAGE_FORMAT_COLOR_BGRA32;
+		FramesPerSecond cameraFps = K4A_FRAMES_PER_SECOND_30;
 
-		WiredSyncMode wiredSyncMode;
-		uint32_t depthDelayUsec;
-		uint32_t subordinateDelayUsec;
+		WiredSyncMode wiredSyncMode = K4A_WIRED_SYNC_MODE_STANDALONE;
+		uint32_t depthDelayUsec = 0;
+		uint32_t subordinateDelayUsec = 0;
 
-		bool updateColor;
-		bool updateIr;
-		bool updateWorld;
-		bool updateVbo;
+		bool updateColor = false;
+		bool updateIr = false;
 
-		bool syncImages;
+		bool updateWorld = false;	// Used for point cloud or for body tracking
+		bool updatePointCloud = false; // If true,it automatically sets UpdateWorld
+		bool updatePointCloudTexCoords = false; // Can't be true without updatePointCloud
+		bool updateVbo = false; // If true, it automatically sets updateWorld, updatePointCloud and updatePointCloudTexCoords
 
-		DeviceSettings();
+		bool syncImages = false;
 	};
 
-	class Device 
+	class Device
 		: public Stream
 	{
 	public:
 		static int getInstalledCount();
+		static std::vector<std::string> getSerials();
 
 	public:
 		Device();
@@ -79,12 +81,12 @@ namespace ofxAzureKinect
 
 	private:
 		int index;
-	
+
 		bool bRecording;
 
 		k4a_device_configuration_t config;
 		k4a::device device;
-		
+
 		Recorder recorder;
 	};
 }

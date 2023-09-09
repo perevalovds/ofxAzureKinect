@@ -83,6 +83,7 @@ void ofApp::openDevice()
 		deviceSettings.colorResolution = ofxAzureKinect::ColorResolution::K4A_COLOR_RESOLUTION_720P;
 		deviceSettings.syncImages = false;
 		deviceSettings.updateWorld = false;
+        // TODO settings now all false by default - so needs to test it here
 		kinectDevice.startCameras(deviceSettings);
 	}
 }

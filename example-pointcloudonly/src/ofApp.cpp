@@ -21,6 +21,7 @@ void ofApp::setup()
 		settings.updateColor = false;
 		settings.updateIr = false;
 		settings.updateWorld = true;
+		settings.update3DPoints = false;        
 		settings.updateVbo = true;
 		settings.syncImages = false;
 

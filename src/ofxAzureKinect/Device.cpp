@@ -6,24 +6,28 @@ const int32_t TIMEOUT_IN_MS = 1000;
 
 namespace ofxAzureKinect
 {
-	DeviceSettings::DeviceSettings()
-		: depthMode(K4A_DEPTH_MODE_NFOV_UNBINNED)
-		, colorResolution(K4A_COLOR_RESOLUTION_2160P)
-		, colorFormat(K4A_IMAGE_FORMAT_COLOR_BGRA32)
-		, cameraFps(K4A_FRAMES_PER_SECOND_30)
-		, wiredSyncMode(K4A_WIRED_SYNC_MODE_STANDALONE)
-		, depthDelayUsec(0)
-		, subordinateDelayUsec(0)
-		, updateColor(true)
-		, updateIr(true)
-		, updateWorld(true)
-		, updateVbo(true)
-		, syncImages(true)
-	{}
-
 	int Device::getInstalledCount()
 	{
 		return k4a_device_get_installed_count();
+	}
+
+	std::vector<std::string> Device::getSerials()
+	{
+		int n = getInstalledCount();
+		std::vector<std::string> serials(n);
+		for (int idx = 0; idx < n; idx++) {
+			try
+			{
+				auto device = k4a::device::open(idx);
+				serials[idx] = device.get_serialnum();
+			}
+			catch (const k4a::error& e)
+			{
+				serials[idx] = "error";
+				ofLogError(__FUNCTION__) << e.what();
+			}
+		}
+		return serials;
 	}
 
 	Device::Device()
@@ -144,22 +148,26 @@ namespace ofxAzureKinect
 		}
 
 		// Generate device config.
-		this->config = K4A_DEVICE_CONFIG_INIT_DISABLE_ALL;
-		this->config.depth_mode = deviceSettings.depthMode;
-		this->config.color_format = deviceSettings.colorFormat;
-		this->config.color_resolution = deviceSettings.colorResolution;
-		this->config.camera_fps = deviceSettings.cameraFps;
-		this->config.synchronized_images_only = deviceSettings.syncImages;
+		config = K4A_DEVICE_CONFIG_INIT_DISABLE_ALL;
+		config.depth_mode = deviceSettings.depthMode;
+		config.color_format = deviceSettings.colorFormat;
+		config.color_resolution = deviceSettings.colorResolution;
+		config.camera_fps = deviceSettings.cameraFps;
+		config.synchronized_images_only = deviceSettings.syncImages;
 
-		this->config.wired_sync_mode = deviceSettings.wiredSyncMode;
-		this->config.depth_delay_off_color_usec = deviceSettings.depthDelayUsec;
-		this->config.subordinate_delay_off_master_usec = deviceSettings.subordinateDelayUsec;
+		config.wired_sync_mode = deviceSettings.wiredSyncMode;
+		config.depth_delay_off_color_usec = deviceSettings.depthDelayUsec;
+		config.subordinate_delay_off_master_usec = deviceSettings.subordinateDelayUsec;
 
 		// Set update flags.
-		this->bUpdateColor = deviceSettings.updateColor;
-		this->bUpdateIr = deviceSettings.updateIr;
-		this->bUpdateWorld = deviceSettings.updateWorld;
-		this->bUpdateVbo = deviceSettings.updateWorld && deviceSettings.updateVbo;
+		bUpdateColor = deviceSettings.updateColor;
+		bUpdateIr = deviceSettings.updateIr;
+
+		bUpdateVbo = deviceSettings.updateVbo;
+		bUpdatePointCloud = bUpdateVbo || deviceSettings.updatePointCloud;
+		bUpdatePointCloudTexCoords = bUpdateVbo || deviceSettings.updatePointCloudTexCoords;
+
+		bUpdateWorld = bUpdatePointCloud || bUpdateVbo || deviceSettings.updateWorld;
 
 		// Get calibration.
 		try

@@ -27,6 +27,7 @@ void ofApp::setupStandalone()
 	kinectSettings.colorResolution = K4A_COLOR_RESOLUTION_720P;
 	kinectSettings.syncImages = true;
 	kinectSettings.updateWorld = false;
+    // TODO settings now all false by default - so needs to test it here
 
 	for (int i = 0; i < numConnected; ++i)
 	{
@@ -51,6 +52,7 @@ void ofApp::setupMasterSubordinate()
 	kinectSettings.colorResolution = K4A_COLOR_RESOLUTION_720P;
 	kinectSettings.syncImages = true;
 	kinectSettings.updateWorld = false;
+    // TODO settings now all false by default - so needs to test it here
 
 	// Open Master device.
 	{

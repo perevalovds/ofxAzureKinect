@@ -3,17 +3,7 @@
 namespace ofxAzureKinect
 {
 	Stream::Stream()
-		: bOpen(false)
-		, bStreaming(false)
-		, bNewFrame(false)
-		, serialNumber("")
-		, pixFrameNum(0)
-		, texFrameNum(0)
-		, bUpdateColor(false)
-		, bUpdateIr(false)
-		, bUpdateWorld(false)
-		, bUpdateVbo(false)
-		, jpegDecompressor(tjInitDecompress())
+		: jpegDecompressor(tjInitDecompress())
 	{}
 
 	Stream::~Stream()
@@ -292,7 +282,7 @@ namespace ofxAzureKinect
 			}
 		}
 
-		if (this->bUpdateVbo)
+		if (this->bUpdateVbo || bUpdatePointCloud || bUpdatePointCloudTexCoords)
 		{
 			if (this->bUpdateColor)
 			{
@@ -441,28 +431,60 @@ namespace ofxAzureKinect
 		const auto frameData = reinterpret_cast<uint16_t*>(frameImg.get_buffer());
 		const auto tableData = reinterpret_cast<k4a_float2_t*>(tableImg.get_buffer());
 
-		this->positionCache.resize(frameDims.x * frameDims.y);
-		this->uvCache.resize(frameDims.x * frameDims.y);
+		if (bUpdatePointCloud)
+			positionCache.resize(frameDims.x * frameDims.y);
+		else
+			positionCache.clear();
+
+		if (bUpdatePointCloudTexCoords)
+			uvCache.resize(frameDims.x * frameDims.y);
+		else
+			uvCache.clear();
 
 		int count = 0;
-		for (int y = 0; y < frameDims.y; ++y)
+		if (bUpdatePointCloud && bUpdatePointCloudTexCoords)
 		{
-			for (int x = 0; x < frameDims.x; ++x)
+			for (int y = 0; y < frameDims.y; ++y)
 			{
-				int idx = y * frameDims.x + x;
-				if (frameData[idx] != 0 &&
-					tableData[idx].xy.x != 0 && tableData[idx].xy.y != 0)
+				for (int x = 0; x < frameDims.x; ++x)
 				{
-					float depthVal = static_cast<float>(frameData[idx]);
-					this->positionCache[count] = glm::vec3(
-						tableData[idx].xy.x * depthVal,
-						tableData[idx].xy.y * depthVal,
-						depthVal
-					);
+					int idx = y * frameDims.x + x;
+					if (frameData[idx] != 0 &&
+						tableData[idx].xy.x != 0 && tableData[idx].xy.y != 0)
+					{
+						float depthVal = static_cast<float>(frameData[idx]);
+						this->positionCache[count] = glm::vec3(
+							tableData[idx].xy.x * depthVal,
+							tableData[idx].xy.y * depthVal,
+							depthVal
+						);
 
-					this->uvCache[count] = glm::vec2(x, y);
+						this->uvCache[count] = glm::vec2(x, y);
 
-					++count;
+						++count;
+					}
+				}
+			}
+		}
+		else if (bUpdatePointCloud) {
+			for (int y = 0; y < frameDims.y; ++y)
+			{
+				for (int x = 0; x < frameDims.x; ++x)
+				{
+					int idx = y * frameDims.x + x;
+					if (frameData[idx] != 0 &&
+						tableData[idx].xy.x != 0 && tableData[idx].xy.y != 0)
+					{
+						float depthVal = static_cast<float>(frameData[idx]);
+						this->positionCache[count] = glm::vec3(
+							tableData[idx].xy.x * depthVal,
+							tableData[idx].xy.y * depthVal,
+							depthVal
+						);
+
+						// this->uvCache[count] = glm::vec2(x, y);
+						++count;
+					}
 				}
 			}
 		}
@@ -646,6 +668,34 @@ namespace ofxAzureKinect
 	const ofTexture& Stream::getColorInDepthTex() const
 	{
 		return this->colorInDepthTex;
+	}
+
+	const std::vector<glm::vec3> Stream::getPointCloud() const
+	{
+		return positionCache;
+	}
+	const std::vector<glm::vec2> Stream::getPointCloudTexCoords() const
+	{
+		return uvCache;
+	}
+
+	bool Stream::GetPointCloudMirrored(std::vector<glm::vec3>& pc, int mirrorx, int mirrory, int mirrorz) const
+	{
+		auto& points = getPointCloud();
+		if (points.empty()) {
+			pc.clear();
+			return false;
+		}
+		int size = points.size();
+		pc.resize(size);
+		float kx = (mirrorx) ? -1000 : 1000;
+		float ky = (mirrory) ? -1000 : 1000;
+		float kz = (mirrorz) ? -1000 : 1000;
+		for (int k = 0; k < size; k++) {
+			auto& V = points[k];
+			pc[k] = glm::vec3(V.x * kx, V.y * ky, V.z * kz);
+		}
+		return true;
 	}
 
 	const ofVbo& Stream::getPointCloudVbo() const

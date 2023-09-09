@@ -48,6 +48,11 @@ namespace ofxAzureKinect
 		virtual uint32_t getDepthDelayUsec() const = 0;
 		virtual uint32_t getSubordinateDelayUsec() const = 0;
 
+		const std::vector<glm::vec3> getPointCloud() const;
+		const std::vector<glm::vec2> getPointCloudTexCoords() const;
+		bool GetPointCloudMirrored(std::vector<glm::vec3>& pc, int mirrorx = 0, int mirrory = 0, int mirrorz = 0) const;
+		const ofVbo& getPointCloudVbo() const;
+
 		const ofShortPixels& getDepthPix() const;
 		const ofTexture& getDepthTex() const;
 
@@ -68,8 +73,6 @@ namespace ofxAzureKinect
 
 		const ofPixels& getColorInDepthPix() const;
 		const ofTexture& getColorInDepthTex() const;
-
-		const ofVbo& getPointCloudVbo() const;
 
 #ifdef USE_BODYTRACKER
 		const BodyTracker& getBodyTracker() const;
@@ -107,18 +110,21 @@ namespace ofxAzureKinect
 		virtual bool updateColorInDepthFrame(const k4a::image& depthImg, const k4a::image& colorImg);
 
 	protected:
-		bool bOpen;
-		bool bStreaming;
-		bool bNewFrame;
+		bool bOpen = false;
+		bool bStreaming = false;
+		bool bNewFrame = false;
 
-		bool bUpdateColor;
-		bool bUpdateIr;
-		bool bUpdateWorld;
-		bool bUpdateVbo;
+		bool bUpdateColor = false;
+		bool bUpdateIr = false;
+
+		bool bUpdateWorld = false;	// Used for point cloud or for body tracking
+		bool bUpdatePointCloud = false;	// If true, it automatically sets UpdateWorld
+		bool bUpdatePointCloudTexCoords = false; // Can't be true without updatePointCloud
+		bool bUpdateVbo = false;		// If true,it automatically sets UpdateWorld, bUpdatePointCloud and bUpdatePointCloudTexCoords
 
 		std::condition_variable condition;
-		uint64_t pixFrameNum;
-		uint64_t texFrameNum;
+		uint64_t pixFrameNum = 0;
+		uint64_t texFrameNum = 0;
 
 		std::string serialNumber;
 
@@ -157,7 +163,8 @@ namespace ofxAzureKinect
 
 		std::vector<glm::vec3> positionCache;
 		std::vector<glm::vec2> uvCache;
-		size_t numPoints;
+		size_t numPoints= 0;
+			
 		ofVbo pointCloudVbo;
 	};
 }

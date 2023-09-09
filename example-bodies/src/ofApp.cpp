@@ -17,6 +17,7 @@ void ofApp::setup()
 		//deviceSettings.colorResolution = K4A_COLOR_RESOLUTION_1080P;
 		deviceSettings.updateWorld = true;
 		deviceSettings.updateVbo = false;
+        // TODO settings now all false by default - so needs to test it here
 		this->kinectDevice.startCameras(deviceSettings);
 	
 		auto bodyTrackerSettings = ofxAzureKinect::BodyTrackerSettings();

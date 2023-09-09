@@ -2,14 +2,6 @@
 
 namespace ofxAzureKinect
 {
-	PlaybackSettings::PlaybackSettings()
-		: updateColor(true)
-		, updateIr(true)
-		, updateWorld(true)
-		, updateVbo(true)
-		, autoloop(true)
-	{}
-
 	Playback::Playback()
 		: Stream()
 		, bUpdateDepth(true)
@@ -93,15 +85,19 @@ namespace ofxAzureKinect
 		}
 
 		// Set update flags.
-		this->bUpdateDepth = this->config.depth_track_enabled;
-		this->bUpdateColor = this->config.color_track_enabled && playbackSettings.updateColor;
-		this->bUpdateIr = this->config.ir_track_enabled && playbackSettings.updateIr;
-		this->bUpdateWorld = this->config.depth_track_enabled && playbackSettings.updateWorld;
-		this->bUpdateVbo = this->config.depth_track_enabled && playbackSettings.updateWorld && playbackSettings.updateVbo;
-	
-		this->bLoops = playbackSettings.autoloop;
+		bUpdateDepth = config.depth_track_enabled;
+		bUpdateColor = config.color_track_enabled && playbackSettings.updateColor;
+		bUpdateIr = config.ir_track_enabled && playbackSettings.updateIr;
+		bool depth = config.depth_track_enabled;
+		bUpdateVbo = depth && playbackSettings.updateVbo;
+		bUpdatePointCloud = bUpdateVbo || (depth && playbackSettings.updatePointCloud);
+		bUpdatePointCloudTexCoords = bUpdateVbo || playbackSettings.updatePointCloudTexCoords;
 
-		this->lastFrameSecs = 0;
+		bUpdateWorld = bUpdateVbo || bUpdatePointCloud || (depth && playbackSettings.updateWorld);
+	
+		bLoops = playbackSettings.autoloop;
+
+		lastFrameSecs = 0;
 
 		if (this->bUpdateDepth && this->bUpdateColor)
 		{

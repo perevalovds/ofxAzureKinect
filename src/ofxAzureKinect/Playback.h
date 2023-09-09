@@ -12,14 +12,15 @@ namespace ofxAzureKinect
 {
 	struct PlaybackSettings
 	{
-		bool updateColor;
-		bool updateIr;
-		bool updateWorld;
-		bool updateVbo;
+		bool updateColor = false;
+		bool updateIr = false;
 
-		bool autoloop;
+		bool updateWorld = false;	// Used for point cloud or for body tracking
+		bool updatePointCloud = false; // If true,it automatically sets UpdateWorld
+		bool updatePointCloudTexCoords = false; // Can't be true without updatePointCloud
+		bool updateVbo = false; // If true,it automatically sets updateWorld, updatePointCloud and updatePointCloudTexCoords
 
-		PlaybackSettings();
+		bool autoloop = true;
 	};
 
 	class Playback 
