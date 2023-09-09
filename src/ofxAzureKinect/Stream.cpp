@@ -373,8 +373,10 @@ namespace ofxAzureKinect
 
 		if (this->bUpdateVbo)
 		{
-			this->pointCloudVbo.setVertexData(this->positionCache.data(), this->numPoints, GL_STREAM_DRAW);
-			this->pointCloudVbo.setTexCoordData(this->uvCache.data(), this->numPoints, GL_STREAM_DRAW);
+			if (numPoints > 0) {
+				this->pointCloudVbo.setVertexData(this->positionCache.data(), this->numPoints, GL_STREAM_DRAW);
+				this->pointCloudVbo.setTexCoordData(this->uvCache.data(), this->numPoints, GL_STREAM_DRAW);
+			}
 		}
 
 		if (this->bUpdateColor && this->getColorFormat() == K4A_IMAGE_FORMAT_COLOR_BGRA32)
@@ -444,7 +446,7 @@ namespace ofxAzureKinect
 			uvCache.clear();
 
 		int count = 0;
-		if (bUpdatePointCloud && bUpdatePointCloudTexCoords)
+		if (bUpdatePointCloudTexCoords)
 		{
 			for (int y = 0; y < frameDims.y; ++y)
 			{
@@ -468,7 +470,7 @@ namespace ofxAzureKinect
 				}
 			}
 		}
-		else if (bUpdatePointCloud) {
+		else {
 			for (int y = 0; y < frameDims.y; ++y)
 			{
 				for (int x = 0; x < frameDims.x; ++x)
@@ -490,8 +492,10 @@ namespace ofxAzureKinect
 				}
 			}
 		}
+		positionCache.resize(count);
 
 		this->numPoints = count;
+
 
 		return true;
 	}
@@ -731,9 +735,9 @@ namespace ofxAzureKinect
 		}
 		int size = points.size();
 		pc.resize(size);
-		float kx = (mirrorx) ? -1000 : 1000;
-		float ky = (mirrory) ? -1000 : 1000;
-		float kz = (mirrorz) ? -1000 : 1000;
+		float kx = (mirrorx) ? -1 : 1;
+		float ky = (mirrory) ? -1 : 1;
+		float kz = (mirrorz) ? -1 : 1;
 		for (int k = 0; k < size; k++) {
 			auto& V = points[k];
 			pc[k] = glm::vec3(V.x * kx, V.y * ky, V.z * kz);

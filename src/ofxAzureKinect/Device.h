@@ -39,6 +39,8 @@ namespace ofxAzureKinect
 	{
 	public:
 		static int getInstalledCount();
+
+		// Call it only when all devices are disconnected
 		static std::vector<std::string> getSerials();
 
 	public:
