@@ -64,10 +64,11 @@ void ofApp::draw()
 
 			// kinectDevice.getPointCloudVbo() is GPU point cloud
 
-			this->kinectDevice.getPointCloudVbo().draw(
-				GL_POINTS,
-				0, this->kinectDevice.getPointCloudVbo().getNumVertices()); 
-
+			if (kinectDevice.getPointCloudVbo().getNumVertices() > 0) {
+				this->kinectDevice.getPointCloudVbo().draw(
+					GL_POINTS,
+					0, this->kinectDevice.getPointCloudVbo().getNumVertices());
+			}
 			//if (this->kinectDevice.getColorInDepthTex().isAllocated())
 			//{
 			//	this->kinectDevice.getColorInDepthTex().unbind();
@@ -80,56 +81,56 @@ void ofApp::draw()
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){
+void ofApp::keyPressed(int key) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
+void ofApp::keyReleased(int key) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
+void ofApp::mouseEntered(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
+void ofApp::mouseExited(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){
-	
+void ofApp::dragEvent(ofDragInfo dragInfo) {
+
 }
