@@ -48,14 +48,15 @@ void ofApp::update()
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-	ofBackground(128);
+	ofBackground(0);
 
 	if (this->kinectDevice.isStreaming())
 	{
 		this->cam.begin();
 		{
 			ofDrawAxis(1000.0f);
-			ofScale(0.2f, -0.2f, -0.2f);
+			ofScale(2.5f, -2.5f, -2.5f);
+			ofTranslate(0, 0, 1000);
 
 			//if (this->kinectDevice.getColorInDepthTex().isAllocated())
 			//{
