@@ -26,10 +26,16 @@ void ofApp::update()
 {
 	if (kinectDevice.isFrameNew())
 	{
+		// CPU point cloud for further processing
+		const vector<glm::vec3>& pointCloud = kinectDevice.getPointCloud();
+
 		fpsDevice.newFrame();
 	}
 	if (kinectPlayback.isFrameNew())
 	{
+		// CPU point cloud for further processing
+		const vector<glm::vec3>& pointCloud = kinectPlayback.getPointCloud();
+
 		fpsPlayback.newFrame();
 	}
 }
@@ -43,18 +49,47 @@ void ofApp::draw()
 	{
 		if (kinectPlayback.isStreaming())
 		{
-			kinectPlayback.getColorTex().draw(0, 0, 1280, 720);
+			//kinectPlayback.getColorTex().draw(0, 0, 1280, 720);// TODO not works because we disabled in settings
 			kinectPlayback.getDepthTex16().draw(1280, 0, 360, 360);
 			kinectPlayback.getIrTex().draw(1280, 360, 360, 360);
+
+			// GPU point cloud
+			this->cam.begin();
+			{
+				ofDrawAxis(1000.0f);
+				ofScale(2.5f, -2.5f, -2.5f);
+				ofTranslate(0, 0, 1000);
+				if (kinectPlayback.getPointCloudVbo().getNumVertices() > 0) {
+					kinectPlayback.getPointCloudVbo().draw(
+						GL_POINTS,
+						0, kinectPlayback.getPointCloudVbo().getNumVertices());
+				}
+			}
+			this->cam.end();
+
 		}
 	}
 	else
 	{
 		if (kinectDevice.isStreaming())
 		{
-			kinectDevice.getColorTex().draw(0, 0, 1280, 720);
+			//kinectDevice.getColorTex().draw(0, 0, 1280, 720);	// TODO not works because we disabled in settings
 			kinectDevice.getDepthTex16().draw(1280, 0, 360, 360);
 			kinectDevice.getIrTex().draw(1280, 360, 360, 360);
+
+			// GPU point cloud
+			this->cam.begin();
+			{
+				ofDrawAxis(1000.0f);
+				ofScale(2.5f, -2.5f, -2.5f);
+				ofTranslate(0, 0, 1000);
+				if (kinectDevice.getPointCloudVbo().getNumVertices() > 0) {
+					kinectDevice.getPointCloudVbo().draw(
+						GL_POINTS,
+						0, kinectDevice.getPointCloudVbo().getNumVertices());
+				}
+			}
+			this->cam.end();
 		}
 	}
 
@@ -82,8 +117,12 @@ void ofApp::openDevice()
 		auto deviceSettings = ofxAzureKinect::DeviceSettings();
 		deviceSettings.colorResolution = ofxAzureKinect::ColorResolution::K4A_COLOR_RESOLUTION_720P;
 		deviceSettings.syncImages = false;
-		deviceSettings.updateWorld = false;
-        // TODO settings now all false by default - so needs to test it here
+		deviceSettings.updateColor = false; // TODO Check can we set it true ?
+		deviceSettings.updateIr = true;
+		deviceSettings.updatePointCloud = true; // Used for getting CPU point cloud
+		deviceSettings.updateVbo = true;
+
+		// TODO settings now all false by default - so needs to test it here
 		kinectDevice.startCameras(deviceSettings);
 	}
 }
@@ -112,6 +151,10 @@ void ofApp::openPlayback()
 		if (kinectPlayback.open(result.filePath))
 		{
 			auto playbackSettings = ofxAzureKinect::PlaybackSettings();
+			playbackSettings.updateColor = false;	// TODO "true" don't works, crashes at Stream::updatePointsCache
+			playbackSettings.updateIr = true;
+			playbackSettings.updatePointCloud = true; // Used for getting CPU point cloud
+			playbackSettings.updateVbo = true;
 			kinectPlayback.startPlayback(playbackSettings);
 		}
 		else
@@ -151,51 +194,51 @@ void ofApp::keyPressed(int key)
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
+void ofApp::keyReleased(int key) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
+void ofApp::mouseEntered(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
+void ofApp::mouseExited(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){
-	
+void ofApp::dragEvent(ofDragInfo dragInfo) {
+
 }

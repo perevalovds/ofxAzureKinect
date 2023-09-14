@@ -39,6 +39,8 @@ private:
 	ofxAzureKinect::Playback kinectPlayback;
 	ofFpsCounter fpsPlayback;
 
+	ofEasyCam cam;
+
 	bool bRecord;
 	bool bPlayback;
 	std::string filename;

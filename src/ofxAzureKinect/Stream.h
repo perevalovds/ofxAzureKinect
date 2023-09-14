@@ -54,7 +54,9 @@ namespace ofxAzureKinect
 		const ofVbo& getPointCloudVbo() const;
 
 		const ofShortPixels& getDepthPix() const;
-		const ofTexture& getDepthTex16();	// Loads texture on request
+		const ofTexture& getDepthTex16();	// Updates texture once if it'sdirty
+	
+		// Use it to create 8bit texture to visualize depth image with given cropping distances
 		bool getDepthPixels8(float min_dist, float max_dist, int& w, int& h, std::vector<unsigned char>& data);
 
 

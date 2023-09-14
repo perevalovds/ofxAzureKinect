@@ -626,7 +626,6 @@ namespace ofxAzureKinect
 			depthTexIsDirty = false;
 			if (depthPix.isAllocated())
 			{
-
 				depthTex.loadData(depthPix);
 				ofLogVerbose(__FUNCTION__) << "Update Depth16 " << depthTex.getWidth() << "x" << depthTex.getHeight() << ".";
 			}
