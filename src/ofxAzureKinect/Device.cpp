@@ -2,8 +2,6 @@
 
 #include "ofLog.h"
 
-const int32_t TIMEOUT_IN_MS = 1000;
-
 namespace ofxAzureKinect
 {
 	int Device::getInstalledCount()
@@ -32,7 +30,6 @@ namespace ofxAzureKinect
 
 	Device::Device()
 		: Stream()
-		, index(-1)
 	{}
 
 	Device::~Device()
@@ -289,13 +286,25 @@ namespace ofxAzureKinect
 	{
 		try
 		{
+			const int32_t TIMEOUT_IN_MS = 1000;
+
 			if (this->device.get_capture(&this->capture, std::chrono::milliseconds(TIMEOUT_IN_MS)))
 			{
+				// Empty the frame queue
+				while (true) {
+					k4a::capture capture1;
+					if (!this->device.get_capture(&capture1, std::chrono::milliseconds(0))) {
+						break;
+					}
+					capture.reset();
+					capture = capture1;
+					capture1.reset();
+				}
 				return true;
 			}
 			else
 			{
-				ofLogWarning(__FUNCTION__) << "Timed out waiting for a capture for device " << this->index << "::" << this->serialNumber << ".";
+				// ofLogWarning(__FUNCTION__) << "Timed out waiting for a capture for device " << this->index << "::" << this->serialNumber << ".";
 				return false;
 			}
 		}

@@ -82,9 +82,9 @@ namespace ofxAzureKinect
 		void updatePixels() override;
 
 	private:
-		int index;
+		int index = -1;
 
-		bool bRecording;
+		bool bRecording = false;
 
 		k4a_device_configuration_t config;
 		k4a::device device;
