@@ -166,10 +166,18 @@ namespace ofxAzureKinect
 
 		bUpdateWorld = bUpdatePointCloud || bUpdateVbo || deviceSettings.updateWorld;
 
-		// Get calibration.
+		// Get calibration and intrinsics
 		try
 		{
 			this->calibration = this->device.get_calibration(this->config.depth_mode, this->config.color_resolution);
+
+			const k4a_calibration_camera_t& depth_intrinsics = calibration.depth_camera_calibration;
+
+			fx_ = depth_intrinsics.intrinsics.parameters.param.fx;
+			fy_ = depth_intrinsics.intrinsics.parameters.param.fy;
+			cx_ = depth_intrinsics.intrinsics.parameters.param.cx;
+			cy_ = depth_intrinsics.intrinsics.parameters.param.cy;
+
 		}
 		catch (const k4a::error& e)
 		{
@@ -226,8 +234,17 @@ namespace ofxAzureKinect
 		return this->startStreaming();
 	}
 
+	void Device::getDepthIntrinsics(float& fx, float& fy, float& cx, float& cy) {
+		fx = fx_;
+		fy = fy_;
+		cx = cx_;
+		cy = cy_;
+	}
+
 	bool Device::stopCameras()
 	{
+		clearDepthIntrinsics();
+
 		if (!this->bStreaming) return false;
 
 		this->stopStreaming();
@@ -242,6 +259,8 @@ namespace ofxAzureKinect
 
 	bool Device::startRecording(std::string filepath)
 	{
+		clearDepthIntrinsics();		// Intrinsics for recording are not implemented
+
 		if (!this->bOpen) return false;
 
 		if (this->isRecording())

@@ -54,6 +54,9 @@ namespace ofxAzureKinect
 		bool startCameras(DeviceSettings deviceSettings = DeviceSettings());
 		bool stopCameras();
 
+		// Is available after camera start
+		void getDepthIntrinsics(float& fx, float& fy, float& cx, float& cy);
+
 		bool startRecording(std::string filepath = "");
 		bool stopRecording();
 
@@ -90,5 +93,18 @@ namespace ofxAzureKinect
 		k4a::device device;
 
 		Recorder recorder;
+
+		// Intrinsics
+		float fx_ = 0;
+		float fy_ = 0;
+		float cx_ = 0;
+		float cy_ = 0;
+		void clearDepthIntrinsics() {
+			fx_ = 0;
+			fy_ = 0;
+			cx_ = 0;
+			cy_ = 0;
+		}
+
 	};
 }
